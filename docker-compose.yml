@@ -1,0 +1,47 @@
+name: kava
+services:
+    app:
+        build:
+            context: ./
+            dockerfile: Dockerfile
+        container_name: app
+        restart: unless-stopped
+        working_dir: /var/www/
+        volumes:
+            - ./:/var/www
+        networks:
+            - network
+
+    nginx:
+        image: nginx:alpine
+        container_name: nginx
+        restart: unless-stopped
+        ports:
+            - 8000:80
+        volumes:
+            - ./:/var/www
+            - ./docker-compose/nginx:/etc/nginx/conf.d/
+        networks:
+            - network
+
+    mysql:
+        image: mysql:8.4
+        container_name: mysql
+        restart: unless-stopped
+        environment:
+            - MYSQL_DATABASE=${DB_DATABASE}
+            - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+            - MYSQL_USER=${DB_USERNAME}
+            - MYSQL_PASSWORD=${DB_PASSWORD}
+        volumes:
+            - database:/var/lib/mysql
+        ports:
+            - "3306:3306"
+        networks:
+            - network
+networks:
+    network:
+        driver: bridge
+
+volumes:
+    database:
