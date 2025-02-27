@@ -1,66 +1,177 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Task Management API - Kava Up LLC
+This project is a Laravel-based Task Management API designed to handle project and task creation, 
+updates, and notifications. Users can create multiple projects, add tasks under each project,
+and receive alerts when tasks are nearing their deadlines. 
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+This README will walk you through
+the project’s setup, architecture, and design considerations.
 
-## About Laravel
+## Table of Contents
+1. [Roadmap](#roadmap)
+2. [Requirements](#requirements)
+2. [Setup](#setup)
+3. [Architecture](#architecture)
+4. [Design Considerations](#design-considerations)
+5. [Features](#features)
+6. [Database Schema](#database-schema)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Roadmap
+- [x] Setup Laravel project
+- [x] Work in the Docker setup
+- [X] Add Readme file
+- [ ] Write tests
+- [ ] Create database schema
+- [ ] Implement project and task creation
+- [ ] Implement task notifications
+- [ ] Prepare containerized deployment
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Requirements
+### Development
+To run this project locally, I have created a Docker container that will run the project using docker-compose.
+Make sure that you have the following installed:
+- [Docker Desktop](https://www.docker.com/products/docker-desktop)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+The Docker-compose services available for now are:
+- kava-app
+  - The Laravel application
+- kava-nginx
+  - For serving the Laravel application
+- kava-mysql
+  - For the database
 
-## Learning Laravel
+There is a makefile with some useful commands to run the project.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+You can run the following command to start the project, the first time you run this command 
+it will take a while to build the images, the project will be available at http://localhost:8000
+```bash
+make start
+```
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+To stop the project, you can run:
+```bash
+make stop
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+The list of available commands can be found in the Makefile.
 
-## Laravel Sponsors
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+If you prefer to run the project without Docker, you will need to have the following installed:
+- PHP >= 8.2
+- Composer
+- MySQL
+and follow up the setup instructions in Laravel documentation page.
 
-### Premium Partners
+### Deployment
+TODO: Add deployment requirements, work in the Docker file setup and deployment instructions.
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+## Setup
+1. Clone the repository
+```bash
+git clone git@github.com:hugo-delarosa/kava-up-code-challenge.git
+cd task-management-api
+```
+2. Create a `.env` file
+```bash
+cp .env.example .env
+```
+modify the `.env` file to match your local environment settings.
 
-## Contributing
+3. Start the project
+```bash
+make start
+```
+or
+```bash
+docker-compose up -d
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+4. Run the migrations
+```bash
+make migrate
+```
 
-## Code of Conduct
+or
+```bash
+docker-compose exec kava-app php artisan migrate
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## Architecture
+The project is built using the Laravel framework, a PHP-based web application framework. 
+I have decided to use Laravel Sanctum for API authentication, as it provides a simple way to authenticate users
+and issue API tokens.
 
-## Security Vulnerabilities
+The project is structured in the following way:
+- `app/Http/API/Controllers/`: Contains the controllers for the API endpoints.
+- `app/Models/`: Contains the models for the database tables.
+- `database/migrations/`: Contains the database migrations.
+- `routes/api.php`: Contains the API routes.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## Design Considerations
+- **Database Schema**: I have designed the database schema to be simple and easy to understand. 
+  The schema consists mainly of two tables: `projects` and `tasks`. Each project can have multiple tasks.
+- **API Endpoints**: I have designed the API endpoints to be RESTful and easy to use. 
+  The API endpoints are designed to be self-explanatory and easy to understand.
+- **Authentication**: I have used Laravel Sanctum for API authentication. 
+  This allows users to authenticate using API tokens and access the API endpoints securely.
+- **Notifications**: I have implemented task notifications using Laravel's built-in notification system. 
+  Users will receive notifications when tasks are nearing their deadlines.
 
-## License
+## Features
+- **Projects**: Users can create projects and add tasks under each project.
+- **Tasks**: Users can create tasks under each project.
+  - **Task Assignments**: Users can assign tasks to other users.
+  - **Task Due Dates**: Users can set due dates for tasks.
+  - **Task Completion**: Users can mark tasks as completed.
+  - **Task Deletion**: Users can delete tasks.
+  - **Task Status**: Users can view the status of tasks (e.g., pending, completed). For now the available statuses are `to_do`, `in_progress` and `completed`.
+- **Task Notifications**: Users will receive notifications when tasks are nearing their deadlines.
+- **API Authentication**: Users can authenticate using API tokens.
+- **API Endpoints**: Users can interact with the API using RESTful endpoints.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Database Schema
+The database schema consists of the following tables:
+Note: refer to [Laravel's available column types](https://laravel.com/docs/12.x/migrations#available-column-types) for more information on the column types.
+
+The desciption of the tables and columns are as follows:
+- <column_name>: <column_type> - <column_description>
+
+### Users Table
+The `users` table contains the following columns:
+- `id`: `id` - The user ID.
+- `name`: `string` - The user name.
+- `email`: `string` - The user email.
+- `email_verified_at`: `timestamp` - The user email verification date.
+- `password`: `string` - The user password.
+- `remember_token`: `string` - The user remember token.
+- `created_at`: `timestamp` - The user creation date.
+- `updated_at`: `timestamp` - The user last update date.
+
+
+### Projects Table
+The `projects` table contains the following columns:
+- `id`: `id` -  The project ID.
+- `name`: `string` - The project name.
+- `description`:`text` - The project description. 
+- `created_at`: `timestamp` - The project creation date.
+- `updated_at`:`timestamp` -  The project last update date. 
+- `user_id`:`foreignId` - The user ID of the project owner. 
+- `deleted_at`: `timestamp` - The project deletion date. I have considered using soft deletes to keep track of deleted projects.
+- `completed_at`: `timestamp` - The project completion date. I have considered adding a completion date to track when a project is completed.
+- `due_date`: `dateTime` The project due date. I have considered adding a due date to track when a project is due.
+
+### Tasks Table
+The `tasks` table contains the following columns:
+- `id`: `id` - The task ID.
+- `name`: `string` - The task name.
+- `description`:`text` - The task description.
+- `created_at`: `timestamp` - The task creation date.
+- `updated_at`:`timestamp` - The task last update date.
+- `project_id`:`foreignId` - The project ID of the task.
+- `user_id`:`foreignId` - The user ID of the task owner.
+- `assigned_to`:`foreignId` - The user ID of the task assignee.
+- `due_date`: `dateTime` - The task due date.
+- `status`: `enum` - The task status. For now the available statuses are `to_do`, `in_progress` and `completed`.
+- `deleted_at`: `timestamp` - The task deletion date. I have considered using soft deletes to keep track of deleted tasks.
+- `completed_at`: `timestamp` - The task completion date. I have considered adding a completion date to track when a task is completed.
+
+##
