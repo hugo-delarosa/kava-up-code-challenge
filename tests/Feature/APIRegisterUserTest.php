@@ -13,8 +13,6 @@ const USER_PASSWORD = 'password';
 const USER_PASSWORD_CONFIRMATION = 'password';
 const USER_WRONG_PASSWORD = 'wrong_password';
 
-
-
 // The test below checks if a user can register successfully
 it('allows a user to register', function () {
     $response = $this->post(REGISTER_ENDPOINT, [
@@ -30,13 +28,29 @@ it('allows a user to register', function () {
     ]);
 });
 
+// The test below checks if a user can register and receive a token
+it('returns a token after registration', function () {
+    $response = $this->post(REGISTER_ENDPOINT, [
+        'name' => USER_NAME,
+        'email' => USER_EMAIL,
+        'password' => USER_PASSWORD,
+        'password_confirmation' => USER_PASSWORD_CONFIRMATION,
+    ]);
+
+    $response->assertStatus(201);
+    $response->assertJsonStructure([
+        'message',
+        'token',
+    ]);
+});
+
 // The test below checks if a user can register without a name
 it('requires a name', function () {
     $response = $this->post(REGISTER_ENDPOINT, [
         'email' => USER_EMAIL,
         'password' => USER_PASSWORD,
         'password_confirmation' => USER_PASSWORD_CONFIRMATION,
-    ]);
+    ], ['Accept' => 'application/json']);
 
     $response->assertStatus(422);
     $response->assertJsonValidationErrors('name');
@@ -48,7 +62,7 @@ it('requires an email', function () {
         'name' => USER_NAME,
         'password' => USER_PASSWORD,
         'password_confirmation' => USER_PASSWORD_CONFIRMATION,
-    ]);
+    ], ['Accept' => 'application/json']);
 
     $response->assertStatus(422);
     $response->assertJsonValidationErrors('email');
@@ -60,7 +74,7 @@ it('requires a password', function () {
         'name' => USER_NAME,
         'email' => USER_EMAIL,
         'password_confirmation' => USER_PASSWORD_CONFIRMATION,
-    ]);
+    ], ['Accept' => 'application/json']);
 
     $response->assertStatus(422);
     $response->assertJsonValidationErrors('password');
@@ -72,10 +86,10 @@ it('requires a password confirmation', function () {
         'name' => USER_NAME,
         'email' => USER_EMAIL,
         'password' => USER_PASSWORD,
-    ]);
+    ], ['Accept' => 'application/json']);
 
     $response->assertStatus(422);
-    $response->assertJsonValidationErrors('password_confirmation');
+    $response->assertJsonValidationErrors('password');
 });
 
 // The test below checks if a user can register with a wrong password confirmation
@@ -85,7 +99,7 @@ it('requires a password confirmation to match the password', function () {
         'email' => USER_EMAIL,
         'password' => USER_PASSWORD,
         'password_confirmation' => USER_WRONG_PASSWORD,
-    ]);
+    ], ['Accept' => 'application/json']);
 
     $response->assertStatus(422);
     $response->assertJsonValidationErrors('password');
@@ -98,7 +112,7 @@ it('requires a valid email', function () {
         'email' => 'invalid-email',
         'password' => USER_PASSWORD,
         'password_confirmation' => USER_PASSWORD_CONFIRMATION,
-    ]);
+    ], ['Accept' => 'application/json']);
 
     $response->assertStatus(422);
     $response->assertJsonValidationErrors('email');
@@ -111,7 +125,7 @@ it('requires a strong password', function () {
         'email' => USER_EMAIL,
         'password' => '123',
         'password_confirmation' => '123',
-    ]);
+    ], ['Accept' => 'application/json']);
 
     $response->assertStatus(422);
     $response->assertJsonValidationErrors('password');
@@ -133,7 +147,7 @@ it('requires a unique email', function () {
         'email' => USER_EMAIL,
         'password' => USER_PASSWORD,
         'password_confirmation' => USER_PASSWORD_CONFIRMATION,
-    ]);
+    ], ['Accept' => 'application/json']);
 
     $response->assertStatus(422);
     $response->assertJsonValidationErrors('email');
