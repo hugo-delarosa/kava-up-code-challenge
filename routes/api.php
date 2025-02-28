@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\ProjectController;
+use App\Http\Controllers\API\TaskController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -27,5 +28,6 @@ Route::middleware('auth:sanctum')->group(function () {
     //Resource routes
     Route::apiResources([
         'projects' => ProjectController::class,
+        'projects.tasks' => TaskController::class,
     ]);
 });
