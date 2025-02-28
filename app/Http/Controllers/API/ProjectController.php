@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\API\ProjectStoreRequest;
 use App\Http\Requests\API\ProjectUpdateRequest;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class ProjectController extends Controller
@@ -70,5 +71,27 @@ class ProjectController extends Controller
         $project->delete();
 
         return response()->json(null, 204);
+    }
+
+    /**
+     * Return the statistics of the project
+     *
+     */
+    public function statistics(string $id)
+    {
+        //retrieve the project
+        $project = auth()->user()->projects()->findOrFail($id);
+
+        $totalTasks = $project->tasks()->count();
+        $completedTasks = $project->tasks()->where('status', 'done')->count();
+        $overdueTasks = $project->tasks()->where('due_date', '<', Carbon::now())
+            ->where('status', '!=', 'done')
+            ->count();
+
+        return response()->json([
+            'total_tasks' => $totalTasks,
+            'completed_tasks' => $completedTasks,
+            'overdue_tasks' => $overdueTasks,
+        ]);
     }
 }
