@@ -6,8 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\API\UserRegisterRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
-class RegisterController extends Controller
+class AuthController extends Controller
 {
     //function for registering the user and returning the Barear token
     public function register(UserRegisterRequest $request)
