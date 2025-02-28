@@ -30,4 +30,7 @@ Route::middleware('auth:sanctum')->group(function () {
         'projects' => ProjectController::class,
         'projects.tasks' => TaskController::class,
     ]);
+
+    //Custom routes
+    Route::get('/projects/{project_id}/stats', [ProjectController::class, 'statistics']);
 });
