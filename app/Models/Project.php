@@ -12,4 +12,25 @@ class Project extends Model
     use HasFactory;
     use SoftDeletes;
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var list<string>
+     */
+
+    protected $fillable = [
+        'name',
+        'description',
+        'due_date',
+    ];
+
+    /**
+     * Return the user that created the project.
+     *
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
 }
